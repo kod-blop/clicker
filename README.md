@@ -1,0 +1,1 @@
+buyBtn.innerText
