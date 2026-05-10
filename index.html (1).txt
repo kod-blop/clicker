@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Efe-Clicker: Infinity | Yiğit Efe Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+        
+        body {
+            background: radial-gradient(circle, #1a1a2e 0%, #0f0f0f 100%);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .main-btn {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(145deg, #00f2fe, #4facfe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            cursor: pointer;
+            box-shadow: 0 0 50px rgba(79, 172, 254, 0.4);
+            transition: all 0.1s active;
+            user-select: none;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+        }
+        .main-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.8);
+        }
+        .upgrade-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .floating-text {
+            position: absolute;
+            color: #00f2fe;
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+        .signature {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #4facfe;
+            color: #000;
+            text-align: center;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="mt-10 text-center">
+        <h1 class="text-xs tracking-[10px] opacity-50 uppercase">Score</h1>
+        <div id="score" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">0</div>
+        <div id="pps" class="text-[10px] mt-2 opacity-70">Saniyelik Kazanç: 0</div>
+    </div>
+    <div class="flex-1 flex items-center justify-center relative w-full">
+        <div class="main-btn" onclick="clickEff(event)">⚡</div>
+    </div>
+    <div class="w-full flex flex-col items-center pb-16">
+        <div class="upgrade-card">
+            <div>
+                <h3 class="text-sm font-bold">OTOMATİK TIKLAYICI</h3>
+                <p class="text-[10px] opacity-60">Saniyede +1 puan verir</p>
+            </div>
+            <button onclick="buyUpgrade('auto')" id="autoBtn" class="bg-cyan-500 text-black px-4 py-2 rounded-lg font-bold text-xs">15 Puan</button>
+        </div>
+        <div class="upgrade-card">
+            <div>
+                <h3 class="text-sm font-bold">GÜÇLÜ PARMAKLAR</h3>
+                <p class="text-[10px] opacity-60">Tıklama başına +2 puan</p>
+            </div>
+            <button onclick="buyUpgrade('multi')" id="multiBtn" class="bg-blue-500 text-black px-4 py-2 rounded-lg font-bold text-xs">50 Puan</button>
+        </div>
+    </div>
+    <div class="signature uppercase">Made by Yiğit Efe</div>
+    <script>
+        let score = 0;
+        let pps = 0;
+        let clickValue = 1;
+        let autoCost = 15;
+        let multiCost = 50;
+        function clickEff(e) {
+            score += clickValue;
+            updateUI();
+            
+            // Sayı uçurma efekti
+            const float = document.createElement('div');
+            float.className = 'floating-text';
+            float.innerText = '+' + clickValue;
+            float.style.left = e.clientX + 'px';
+            float.style.top = e.clientY + 'px';
+            document.body.appendChild(float);
+            setTimeout(() => float.remove(), 800);
+        }
+        function buyUpgrade(type) {
+            if (type === 'auto' && score >= autoCost) {
+                score -= autoCost;
+                pps += 1;
+                autoCost = Math.round(autoCost * 1.5);
+                updateUI();
+            } else if (type === 'multi' && score >= multiCost) {
+                score -= multiCost;
+                clickValue += 2;
+                multiCost = Math.round(multiCost * 2);
+                updateUI();
+            }
+        }
+        function updateUI() {
+            document.getElementById('score').innerText = Math.floor(score);
+            document.getElementById('pps').innerText = "Saniyelik Kazanç: " + pps;
+            document.getElementById('autoBtn').innerText = autoCost + " Puan";
+            document.getElementById('multiBtn').innerText = multiCost + " Puan";
+        }
+        // Otomatik puan sistemi
+        setInterval(() => {
+            score += pps;
+            updateUI();
+        }, 1000);
+    </script>
+</body>
+</html>
